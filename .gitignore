@@ -3,6 +3,7 @@
 .php_cs.cache
 .phpunit.result.cache
 *.temp
+.env
 build
 composer.lock
 coverage

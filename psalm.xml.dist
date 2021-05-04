@@ -13,4 +13,20 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <UndefinedMethod>
+            <errorLevel type="suppress">
+                <file name="src/Support/HasAttributes.php" />
+            </errorLevel>
+        </UndefinedMethod>
+
+        <MissingReturnType>
+            <errorLevel type="error" />
+        </MissingReturnType>
+
+        <MissingParamType>
+            <errorLevel type="error" />
+        </MissingParamType>
+    </issueHandlers>
 </psalm>
