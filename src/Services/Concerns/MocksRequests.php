@@ -4,6 +4,7 @@ namespace LiveIntent\Services\Concerns;
 
 use Illuminate\Support\Collection;
 use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Response;
 use LiveIntent\Exceptions\FileNotFoundException;
 use LiveIntent\Exceptions\StubNotFoundException;
 use LiveIntent\Exceptions\InvalidOptionException;
@@ -109,15 +110,42 @@ trait MocksRequests
 
         if ($this->shouldSaveRecordings) {
             $recorded = collect($this->recorded)->map(function ($pair) {
-                return [$pair[0], [
-                    'body' => $pair[1]->body(),
-                    'headers' => $pair[1]->headers(),
-                    'status' => $pair[1]->status(),
-                ]];
+                return [
+                    $this->getRequestParts($pair[0]),
+                    $this->getResponseParts($pair[1]),
+                ];
             });
 
             $this->saveRequestResponsePairs($recorded);
         }
+    }
+
+    /**
+     * Get the request parts that should be considered for comparison.
+     *
+     * @return array
+     */
+    public function getRequestParts(Request $request)
+    {
+        return [
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'body' => $this->getNormalizedRequestData($request),
+        ];
+    }
+
+    /**
+     * Get the response parts that should be considered for comparison.
+     *
+     * @return array
+     */
+    public function getResponseParts(Response $response)
+    {
+        return [
+            'body' => $response->body(),
+            'headers' => $response->headers(),
+            'status' => $response->status(),
+        ];
     }
 
     /**
@@ -138,7 +166,7 @@ trait MocksRequests
 
         $snapshots = collect($previouslyRecorded)
             ->concat($recording)
-            ->keyBy(fn ($item) => $this->getRequestChecksum($item[0]));
+            ->keyBy(fn ($item) => $this->getChecksum($item[0]));
 
         file_put_contents($filepath, serialize($snapshots));
     }
@@ -148,9 +176,9 @@ trait MocksRequests
      *
      * @return bool
      */
-    private function isSameRequest(Request $a, Request $b)
+    private function isSameRequest(array $a, Request $b)
     {
-        return $this->getRequestChecksum($a) === $this->getRequestChecksum($b);
+        return $this->getChecksum($a) === $this->getChecksum($this->getRequestParts($b));
     }
 
     /**
@@ -170,18 +198,12 @@ trait MocksRequests
     }
 
     /**
-     * Get a checksum of a request so we can compare if requests are the same.
+     * Get a checksum of an array so we can use it as a comparison key.
      *
      * @return string
      */
-    private function getRequestChecksum(Request $request)
+    private function getChecksum(array $parts)
     {
-        $parts = [
-            $request->method(),
-            $request->url(),
-            $this->getNormalizedRequestData($request),
-        ];
-
-        return hash('crc32b', collect($parts)->map('json_encode')->join(''));
+        return hash('crc32b', json_encode($parts));
     }
 }

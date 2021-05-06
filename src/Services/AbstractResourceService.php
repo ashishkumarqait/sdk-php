@@ -112,12 +112,16 @@ abstract class AbstractResourceService extends AbstractService
     //     //
     // }
 
-    // /**
-    //  */
-    // public function delete($id)
-    // {
-    //     //
-    // }
+    /**
+     * Delete a resource by its id.
+     *
+     * @param string|int $id
+     * @return \LiveIntent\Resource
+     */
+    public function delete($id)
+    {
+        return parent::request('delete', $this->resourceUrl($id));
+    }
 
     /**
      * Send the request to the given URL.

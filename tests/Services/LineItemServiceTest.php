@@ -80,7 +80,7 @@ class LineItemServiceTest extends ServiceTestCase
     public function testCanCreateOrUpdate()
     {
         $originalLineItem = $this->service->createOrUpdate([
-            'name' => 'SDK Test',
+            'name' => 'SDK Test Create or Update',
             'status' => 'paused',
             'budget' => 0,
             'pacing' => 'even',
@@ -92,6 +92,23 @@ class LineItemServiceTest extends ServiceTestCase
         $this->assertInstanceOf(LineItem::class, $updatedLineItem);
         $this->assertEquals($updatedLineItem->id, $originalLineItem->id);
         $this->assertEquals($updatedLineItem->version, $originalLineItem->version + 1);
+    }
+
+    public function testIsDeletable()
+    {
+        $lineItem = $this->service->create([
+            'name' => 'SDK Test Delete',
+            'status' => 'paused',
+            'budget' => 0,
+            'pacing' => 'even',
+            'campaign' => Fixtures::campaignHash(),
+        ]);
+        $this->assertInstanceOf(LineItem::class, $lineItem);
+
+        $this->service->delete($lineItem->id);
+
+        $deletedLineItem = $this->service->find($lineItem->id);
+        $this->assertEquals('deleted', $deletedLineItem->status);
     }
 
     public function testThrowsWhenInvalidDataIsPassed()
