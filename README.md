@@ -51,12 +51,11 @@ $liveIntent = new \LiveIntent\LiveIntentClient([
 
 #### Per-request override example
 ```php
-$liveIntent->lineItems->find(123, [
-    'tries' => 3,                                  // number of retries per request
-    'timeout' => 10,                               // number of seconds to wait on a response before hangup
-    'retryDelay' => 10,                            // number of seconds to wait between retries
-    'baseUrl' => 'localhost:1234',                 // base url of the api
-    'guzzleOptions' => [],                         // additional guzzle options see (https://docs.guzzlephp.org/en/stable/request-options.html)
+$liveIntent->lineItems
+    ->retry(3, 10)
+    ->baseUrl('localhost:1234')
+    ->withOptions([])
+    ->find(123);
 ]);
 ```
 
@@ -91,7 +90,7 @@ class TestCase extends PHPUnit
     {
         $this->liveIntentClient = new LiveIntentClient();
 
-        $this->liveIntentClient->saveRecordings();
+        $this->liveIntentClient->record();
     }
 }
 ```
@@ -119,7 +118,7 @@ class TestCase extends PHPUnit
     {
         $this->liveIntentClient = new LiveIntentClient();
 
-        // $this->liveIntentClient->saveRecordings();
+        // $this->liveIntentClient->record();
 
         $this->liveIntentClient->fake();
     }
