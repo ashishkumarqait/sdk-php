@@ -5,9 +5,9 @@ namespace LiveIntent\Services;
 use LiveIntent\InsertionOrder;
 
 /**
- * @method \LiveIntent\InsertionOrder find($id, $opts = [])
- * @method \LiveIntent\InsertionOrder create($attributes, $opts = [])
- * @method \LiveIntent\InsertionOrder update($attributes, $opts = [])
+ * @method \LiveIntent\InsertionOrder find($id)
+ * @method \LiveIntent\InsertionOrder create($attributes)
+ * @method \LiveIntent\InsertionOrder update($attributes)
  */
 class InsertionOrderService extends AbstractResourceService
 {
