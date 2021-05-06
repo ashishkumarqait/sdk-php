@@ -72,12 +72,24 @@ abstract class AbstractResourceService extends AbstractService
         return $this->withJson($payload)->request('post', $this->resourceUrl($id));
     }
 
-    // /**
-    //  */
-    // public function createOrUpdate($attributes, $key = 'id')
-    // {
-    //     //
-    // }
+    /**
+     * Update an existing resource.
+     *
+     * @param array|\stdClass|\LiveIntent\Resource $attributes
+     * @return \LiveIntent\Resource
+     */
+    public function createOrUpdate($attributes)
+    {
+        $payload = (array) $attributes;
+        $id = $payload['id'] ?? null;
+
+        if ($attributes instanceof Resource) {
+            $id = $attributes->id;
+            $payload = array_merge($attributes->getDirty(), ['version' => $attributes->version]);
+        }
+
+        return $this->withJson($payload)->request('post', $id ? $this->resourceUrl($id) : $this->baseUrl);
+    }
 
     // /**
     //  */
@@ -121,7 +133,6 @@ abstract class AbstractResourceService extends AbstractService
     {
         $response = parent::request($method, $url, $options);
 
-        // TODO - handle multiple, handle other structures
         return $this->newResource($response->json()['output']);
     }
 
