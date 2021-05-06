@@ -2,228 +2,121 @@
 
 namespace LiveIntent\Services;
 
-use LiveIntent\Resource;
-use LiveIntent\Exceptions;
-use Illuminate\Http\Client\Response;
-use LiveIntent\Client\ClientInterface;
+use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Traits\ForwardsCalls;
 
-abstract class AbstractService
+abstract class AbstractService extends Factory
 {
+    use ForwardsCalls;
+    use Concerns\MocksRequests;
+    use Concerns\HandlesApiErrors;
+    use Concerns\AuthenticatesRequests;
+
     /**
-     * The resource's base url. Usually it will just be `/entity`.
+     * The default options to use when creating requests.
      *
-     * @var string
+     * @var array
      */
-    protected $baseUrl;
+    protected $options = [];
 
     /**
-     * The resource class for this entity.
+     * The currently pending request.
      *
-     * @var string
+     * @var \Illuminate\Http\Client\PendingRequest
      */
-    protected $objectClass;
+    private $pendingRequest;
 
     /**
-     * The client to use for issueing requests.
-     */
-    private ClientInterface $client;
-
-    /**
-     * Create a new service instance.
+     * Create a new instance.
      *
      * @return void
      */
-    public function __construct(ClientInterface $client)
+    public function __construct(array $options)
     {
-        $this->client = $client;
+        parent::__construct();
+
+        $this->options = $options;
     }
 
     /**
-     * Find a resource by its id.
+     * Create a new pending request instance for this factory.
      *
-     * @param string|int $id
-     * @param array $opts
-     * @return \LiveIntent\Resource
+     * @return \Illuminate\Http\Client\PendingRequest
      */
-    public function find($id, $opts = [])
+    protected function newPendingRequest()
     {
-        return $this->request('get', $this->resourceUrl($id), null, $opts);
+        $request = new PendingRequest($this);
+
+        return $request
+            ->acceptJson()
+            ->timeout(data_get($this->options, 'timeout', 10))
+            ->baseUrl(data_get($this->options, 'base_url'))
+            ->withOptions(data_get($this->options, 'guzzleOptions', []))
+            ->retry(data_get($this->options, 'tries', 1), data_get($this->options, 'retryDelay', 10));
     }
 
     /**
-     * Create a new resource.
+     * Send the request to the given URL.
      *
-     * @param array|\stdClass|\LiveIntent\Resource $attributes
-     * @param array $opts
-     * @return \LiveIntent\Resource
+     * @param string $method
+     * @param string $url
+     * @param array $options
+     * @return \Illuminate\Http\Client\Response
      */
-    public function create($attributes, $opts = [])
+    public function request(string $method, string $url, array $options = [])
     {
-        $payload = (array) $attributes;
+        $request = tap($this->pendingRequest(), function ($request) {
+            $this->authenticateRequest($request);
+        });
 
-        if ($attributes instanceof Resource) {
-            $payload = $attributes->getAttributes();
-        }
-
-        return $this->request('post', $this->baseUrl, $payload, $opts);
-    }
-
-    /**
-     * Update an existing resource.
-     *
-     * @param array|\stdClass|\LiveIntent\Resource $attributes
-     * @param array $opts
-     * @return \LiveIntent\Resource
-     */
-    public function update($attributes, $opts = [])
-    {
-        $payload = (array) $attributes;
-        $id = $payload['id'] ?? null;
-
-        if ($attributes instanceof Resource) {
-            $id = $attributes->id;
-            $payload = array_merge($attributes->getDirty(), ['version' => $attributes->version]);
-        }
-
-        if ($id === null) {
-            throw Exceptions\InvalidArgumentException::factory($payload, 'Unable to find `id` for update operation');
-        }
-
-        return $this->request('post', $this->resourceUrl($id), $payload, $opts);
-    }
-
-    // /**
-    //  */
-    // public function createOrUpdate($attributes, $key = 'id')
-    // {
-    //     //
-    // }
-
-    // /**
-    //  */
-    // public function createMany($attributeGroups)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  */
-    // public function updateMany($attributeGroups)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  */
-    // public function where($field, $operator, $value)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  */
-    // public function delete($id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Get the client used by the service to make requests.
-     *
-     * @return \LiveIntent\Client\ClientInterface
-     */
-    protected function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * Make a request to the api.
-     *
-     * @param null|array $params
-     * @param array $opts
-     * @return \LiveIntent\Resource
-     */
-    protected function request(string $method, string $path, $params = null, $opts = [])
-    {
-        $response = $this->getClient()->request($method, $path, $params, $opts);
+        $response = $request->send($method, $url, $options);
 
         $this->handleErrors($response);
 
-        // TODO - handle multiple, handle other structures
-        return $this->newResource($response->json()['output']);
+        return $response;
     }
 
     /**
-     * Get the resource's api url, usually it will be
-     * in the form of `entity/{id}`.
+     * Attach a json body to the request.
      *
-     * @param string|int $id
-     * @return string
+     * @param array $data
+     * @return PendingRequest
      */
-    protected function resourceUrl($id)
+    public function withJson(array $data)
     {
-        return sprintf("%s/$id", $this->baseUrl);
+        return $this->withBody(json_encode($data), 'application/json');
     }
 
     /**
-     * Create a new resource instance.
+     * Get the currently pending request.
      *
-     * @param array $body
-     * @return \LiveIntent\Resource
+     * @return PendingRequest
      */
-    private function newResource($body)
+    public function pendingRequest()
     {
-        $class = $this->objectClass;
-
-        return new $class($body);
-    }
-
-    /**
-     * Check for api errors and handle them accordingly.
-     *
-     * @throws \LiveIntent\Exceptions\AbstractRequestException
-     *
-     * @return void
-     */
-    private function handleErrors(Response $response)
-    {
-        if ($response->successful()) {
-            return;
+        if (! $this->pendingRequest) {
+            $this->pendingRequest = $this->newPendingRequest();
         }
 
-        throw $this->newApiError($response);
+        return $this->pendingRequest;
     }
 
     /**
-     * Create the proper exception based on an error response.
+     * Execute a method against the current pending request instance.
      *
-     * @return \LiveIntent\Exceptions\AbstractRequestException
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
      */
-    private function newApiError(Response $response)
+    public function __call($method, $parameters)
     {
-        switch ($response->status()) {
-            case 400:
-            case 422:
-                return Exceptions\InvalidRequestException::factory($response);
-            case 401:
-                return Exceptions\AuthenticationException::factory($response);
-            case 403:
-                return Exceptions\AuthorizationException::factory($response);
-            case 404:
-            case 410:
-                return Exceptions\NotFoundException::factory($response);
-            case 409:
-                return Exceptions\ConflictException::factory($response);
-            case 429:
-                return Exceptions\NotFoundException::factory($response);
-            case 500:
-            case 502:
-            case 503:
-            case 504:
-                return Exceptions\ServerErrorException::factory($response);
-            default:
-                return Exceptions\UnknownApiException::factory($response);
+        $result = $this->forwardCallTo($this->pendingRequest(), $method, $parameters);
+
+        if ($result instanceof PendingRequest) {
+            return $this;
         }
+
+        return $result;
     }
 }

@@ -4,12 +4,11 @@ namespace Tests\Services;
 
 use Tests\Fixtures;
 use LiveIntent\LineItem;
-use LiveIntent\Services\LineItemService;
 use LiveIntent\Exceptions\InvalidRequestException;
 
 class LineItemServiceTest extends ServiceTestCase
 {
-    protected $serviceClass = LineItemService::class;
+    protected $serviceKey = 'lineItems';
 
     public function testIsFindable()
     {

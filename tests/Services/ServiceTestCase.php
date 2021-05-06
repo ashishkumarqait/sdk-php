@@ -4,21 +4,20 @@ namespace Tests\Services;
 
 use Tests\TestCase;
 use LiveIntent\LiveIntentClient;
-use LiveIntent\Services\AbstractService;
 
 class ServiceTestCase extends TestCase
 {
     /**
-     * The service class under test.
+     * The factory key of the service class under test.
      *
      * @var string
      */
-    protected $serviceClass = null;
+    protected $serviceKey = null;
 
     /**
      * The service under test.
      */
-    protected AbstractService $service;
+    protected $service;
 
     /**
      * Set up the test environment.
@@ -29,7 +28,7 @@ class ServiceTestCase extends TestCase
 
         $client = $this->createClient();
 
-        $this->service = new $this->serviceClass($client);
+        $this->service = $client->{$this->serviceKey};
     }
 
     /**
@@ -46,7 +45,7 @@ class ServiceTestCase extends TestCase
         ]);
 
         if (env('RECORD_SNAPSHOTS')) {
-            $client->saveRecordings();
+            $client->record();
         } elseif (env('USE_SNAPSHOTS', true)) {
             $client->fake();
         }

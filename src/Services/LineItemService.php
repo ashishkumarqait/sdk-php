@@ -5,11 +5,11 @@ namespace LiveIntent\Services;
 use LiveIntent\LineItem;
 
 /**
- * @method \LiveIntent\LineItem find($id, $opts = [])
- * @method \LiveIntent\LineItem create($attributes, $opts = [])
- * @method \LiveIntent\LineItem update($attributes, $opts = [])
+ * @method \LiveIntent\LineItem find($id)
+ * @method \LiveIntent\LineItem create($attributes)
+ * @method \LiveIntent\LineItem update($attributes)
  */
-class LineItemService extends AbstractService
+class LineItemService extends AbstractResourceService
 {
     /**
      * The base url for this entity.

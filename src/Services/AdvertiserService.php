@@ -5,11 +5,11 @@ namespace LiveIntent\Services;
 use LiveIntent\Advertiser;
 
 /**
- * @method \LiveIntent\Advertiser find($id, $opts = [])
- * @method \LiveIntent\Advertiser create($attributes, $opts = [])
- * @method \LiveIntent\Advertiser update($attributes, $opts = [])
+ * @method \LiveIntent\Advertiser find($id)
+ * @method \LiveIntent\Advertiser create($attributes)
+ * @method \LiveIntent\Advertiser update($attributes)
  */
-class AdvertiserService extends AbstractService
+class AdvertiserService extends AbstractResourceService
 {
     /**
      * The base url for this entity.

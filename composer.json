@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.3",
+        "illuminate/collections": "^8.40",
         "illuminate/contracts": "^8.40",
         "illuminate/http": "^8.38",
         "illuminate/support": "^8.40",

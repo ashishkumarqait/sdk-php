@@ -2,46 +2,35 @@
 
 namespace LiveIntent;
 
-use LiveIntent\Client\BaseClient;
+use LiveIntent\Client\AbstractClient;
 
-class LiveIntentClient extends BaseClient
+/**
+ * Client used to interact with the LiveIntent Api.
+ *
+ * @property \LiveIntent\Services\AdvertiserService $advertisers
+ * @property \LiveIntent\Services\AuthService $auth
+ * @property \LiveIntent\Services\CampaignService $campaigns
+ * @property \LiveIntent\Services\InsertionOrderService $insertionOrders
+ * @property \LiveIntent\Services\LineItemService $lineItems
+ */
+class LiveIntentClient extends AbstractClient
 {
     /**
-     * A mapping of getters to service classes. This allows developers
-     * to access individual services directly as getters on the
-     * client, rather than instantiating every single service.
-     * @var array<string, class-string>
-     */
-    protected static $classMap = [
-        'advertisers' => Services\AdvertiserService::class,
-        'campaigns' => Services\CampaignService::class,
-        'insertionOrders' => Services\InsertionOrderService::class,
-        'lineItems' => Services\LineItemService::class,
-    ];
-
-    /**
-     * The already instantiated services.
+     * The global client options.
      *
      * @var array
      */
-    protected $services = [];
+    protected $options = [
+        // The base URL for all api requests
+        'base_url' => null,
 
-    /**
-     * Dynamically resolve a service instance.
-     *
-     * @param string $name
-     * @return null|\LiveIntent\Services\AbstractService
-     */
-    public function __get($name)
-    {
-        if (! \array_key_exists($name, static::$classMap)) {
-            return null;
-        }
+        // The number of times a request should be tried
+        'tries' => 1,
 
-        if (! \array_key_exists($name, $this->services)) {
-            $this->services[$name] = new static::$classMap[$name]($this);
-        }
+        // The number of seconds to wait before retrying a request
+        'retryDelay' => 100,
 
-        return $this->services[$name];
-    }
+        // The number of seconds to wait for a response before hanging up
+        'timeout' => 10,
+    ];
 }

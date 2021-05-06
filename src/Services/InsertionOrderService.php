@@ -9,7 +9,7 @@ use LiveIntent\InsertionOrder;
  * @method \LiveIntent\InsertionOrder create($attributes, $opts = [])
  * @method \LiveIntent\InsertionOrder update($attributes, $opts = [])
  */
-class InsertionOrderService extends AbstractService
+class InsertionOrderService extends AbstractResourceService
 {
     /**
      * The base url for this entity.
