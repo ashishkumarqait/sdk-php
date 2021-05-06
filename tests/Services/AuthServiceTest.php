@@ -23,4 +23,12 @@ class AuthServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(User::class, $user);
     }
+
+    public function testActAsAnotherUser()
+    {
+        $this->service->actAs(24);
+        $subject = $this->service->user();
+
+        $this->assertInstanceOf(User::class, $subject);
+    }
 }

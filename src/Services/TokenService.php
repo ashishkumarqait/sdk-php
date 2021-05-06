@@ -72,7 +72,7 @@ class TokenService extends AbstractService
     public function token()
     {
         if ($this->needsNewTokens()) {
-            $this->refreshTokens();
+            $this->obtainTokens();
         }
 
         return $this->accessToken;
@@ -91,10 +91,9 @@ class TokenService extends AbstractService
     /**
      * Obtain a fresh set of tokens.
      *
-     * @param array $opts
-     * @return void
+     * @return \Illuminate\Http\Client\Response
      */
-    public function refreshTokens()
+    public function obtainTokens()
     {
         $response = $this->asForm()->post('oauth/token', [
             'client_id' => $this->clientId,
@@ -108,6 +107,33 @@ class TokenService extends AbstractService
         $this->accessToken = $payload['access_token'];
         $this->tokenType = $payload['token_type'];
         $this->expiresAt = Carbon::now()->addSeconds($payload['expires_in'] - $this->bufferSeconds);
+
+        return $response;
+    }
+
+    /**
+     * Obtain a set of tokens that allow acting on behalf of another user.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function actAs(int $id)
+    {
+        $response = $this->asForm()->post('oauth/token', [
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'grant_type' => 'act_as',
+            'scope' => 'openid',
+            'act_as_user_id' => $id,
+        ]);
+
+        $payload = $response->throw()->json();
+
+        $this->accessToken = $payload['access_token'];
+        $this->tokenType = $payload['token_type'];
+        $this->expiresAt = Carbon::now()->addSeconds($payload['expires_in'] - $this->bufferSeconds);
+
+        return $response;
     }
 
     /**
