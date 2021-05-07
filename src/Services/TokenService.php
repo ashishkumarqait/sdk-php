@@ -57,8 +57,8 @@ class TokenService extends AbstractService
     {
         $this->options = $options;
 
-        $this->clientId = $options['client_id'];
-        $this->clientSecret = $options['client_secret'];
+        $this->clientId = data_get($options, 'client_id');
+        $this->clientSecret = data_get($options, 'client_secret');
 
         $this->stubCallbacks = collect();
     }
