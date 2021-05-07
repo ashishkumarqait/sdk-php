@@ -6,7 +6,7 @@ use LiveIntent\User;
 
 /**
  * @method \LiveIntent\User user()
- * @method \Illuminate\Http\Client\Response actAs(int $id)
+ * @method \Illuminate\Http\Client\Response actAs(int $userId)
  */
 class AuthService extends AbstractService
 {
@@ -17,19 +17,19 @@ class AuthService extends AbstractService
      */
     public function user()
     {
-        $response = $this->request('get', 'me');
-
-        return new User($response->json());
+        return new User(
+            $this->request('get', 'me')->json()
+        );
     }
 
     /**
      * Log in as another user.
      *
-     * @param int $id
+     * @param int $userId
      * @return \LiveIntent\User
      */
-    public function actAs(int $id)
+    public function actAs(int $userId)
     {
-        return $this->tokenService->actAs($id);
+        return $this->tokenService->actAs($userId);
     }
 }
