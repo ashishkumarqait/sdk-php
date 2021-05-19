@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Generate changelog
-        uses: metcalfc/changelog-generator@v1.0.0
+        uses: metcalfc/changelog-generator@latest
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Draft release
