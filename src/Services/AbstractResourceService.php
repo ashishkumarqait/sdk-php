@@ -116,7 +116,7 @@ abstract class AbstractResourceService extends BaseService
      * Delete a resource by its id.
      *
      * @param string|int $id
-     * @return \LiveIntent\Resource
+     * @return \LiveIntent\Resource|\Illuminate\Http\Client\Response
      */
     public function delete($id)
     {

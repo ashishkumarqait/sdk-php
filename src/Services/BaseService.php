@@ -57,6 +57,20 @@ class BaseService extends Factory
     }
 
     /**
+     * Impersonate the given user when issuing requests.
+     *
+     * @param int $userId
+     * @return $this
+     */
+    public function actingAs(int $userId)
+    {
+        $this->tokenService->actAs($userId);
+        // $request = new PendingRequest($this);
+
+        return $this;
+    }
+
+    /**
      * Send the request to the given URL.
      *
      * @param string $method
@@ -100,6 +114,81 @@ class BaseService extends Factory
         }
 
         return $this->pendingRequest;
+    }
+
+    /**
+     * Issue a GET request to the given URL.
+     *
+     * @param  string  $url
+     * @param  array|string|null  $query
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function get(string $url, $query = null)
+    {
+        return $this->request('GET', $url, [
+            'query' => $query,
+        ]);
+    }
+
+    /**
+     * Issue a HEAD request to the given URL.
+     *
+     * @param  string  $url
+     * @param  array|string|null  $query
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function head(string $url, $query = null)
+    {
+        return $this->request('HEAD', $url, [
+            'query' => $query,
+        ]);
+    }
+
+    /**
+     * Issue a POST request to the given URL.
+     *
+     * @param  string  $url
+     * @param  array  $data
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function post(string $url, array $data = [])
+    {
+        return $this->request('POST', $url, $data);
+    }
+
+    /**
+     * Issue a PATCH request to the given URL.
+     *
+     * @param  string  $url
+     * @param  array  $data
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function patch($url, $data = [])
+    {
+        return $this->request('PATCH', $url, $data);
+    }
+
+    /**
+     * Issue a PUT request to the given URL.
+     *
+     * @param  string  $url
+     * @param  array  $data
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function put($url, $data = [])
+    {
+        return $this->request('PUT', $url, $data);
+    }
+
+    /**
+     * Issue a DELETE request to the given URL.
+     *
+     * @param  string  $url
+     * @return \Illuminate\Http\Client\Response|\LiveIntent\Resource
+     */
+    public function delete($url)
+    {
+        return $this->request('DELETE', $url);
     }
 
     /**

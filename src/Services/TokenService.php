@@ -95,12 +95,14 @@ class TokenService extends BaseService
      */
     public function obtainTokens()
     {
-        $response = $this->asForm()->post('oauth/token', [
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'grant_type' => 'client_credentials',
-            'scope' => 'openid',
-        ]);
+        $response = $this->pendingRequest()
+            ->asForm()
+            ->post('oauth/token', [
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'grant_type' => 'client_credentials',
+                'scope' => 'openid',
+            ]);
 
         $payload = $response->throw()->json();
 
@@ -119,13 +121,14 @@ class TokenService extends BaseService
      */
     public function actAs(int $id)
     {
-        $response = $this->asForm()->post('oauth/token', [
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'grant_type' => 'act_as',
-            'scope' => 'openid',
-            'act_as_user_id' => $id,
-        ]);
+        $response = $this->pendingRequest()
+            ->asForm()->post('oauth/token', [
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'grant_type' => 'act_as',
+                'scope' => 'openid',
+                'act_as_user_id' => $id,
+            ]);
 
         $payload = $response->throw()->json();
 
