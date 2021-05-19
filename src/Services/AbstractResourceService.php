@@ -5,7 +5,7 @@ namespace LiveIntent\Services;
 use LiveIntent\Resource;
 use LiveIntent\Exceptions;
 
-abstract class AbstractResourceService extends AbstractService
+abstract class AbstractResourceService extends BaseService
 {
     /**
      * The resource's base url. Usually it will just be `/entity`.

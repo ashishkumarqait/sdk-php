@@ -4,7 +4,7 @@ namespace LiveIntent\Services;
 
 use Carbon\Carbon;
 
-class TokenService extends AbstractService
+class TokenService extends BaseService
 {
     /**
      * The client id.

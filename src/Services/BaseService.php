@@ -6,7 +6,7 @@ use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Traits\ForwardsCalls;
 
-abstract class AbstractService extends Factory
+class BaseService extends Factory
 {
     use ForwardsCalls;
     use Concerns\MocksRequests;

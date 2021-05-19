@@ -8,7 +8,7 @@ use LiveIntent\User;
  * @method \LiveIntent\User user()
  * @method \Illuminate\Http\Client\Response actAs(int $userId)
  */
-class AuthService extends AbstractService
+class AuthService extends BaseService
 {
     /**
      * Get the currently authenticated user.
