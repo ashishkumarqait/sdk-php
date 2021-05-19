@@ -119,12 +119,12 @@ abstract class AbstractResourceService extends BaseService
     /**
      * Delete a resource by its id.
      *
-     * @param string|int $id
+     * @param string|int $arg
      * @return \LiveIntent\Resource|\Illuminate\Http\Client\Response
      */
-    public function delete($id)
+    public function delete($arg)
     {
-        return parent::request('delete', $this->resourceUrl($id));
+        return parent::request('delete', $this->resourceUrl($arg));
     }
 
     /**

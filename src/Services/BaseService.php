@@ -182,12 +182,12 @@ class BaseService extends Factory
     /**
      * Issue a DELETE request to the given URL.
      *
-     * @param  string  $url
+     * @param  string  $arg
      * @return \Illuminate\Http\Client\Response|\LiveIntent\Resource
      */
-    public function delete($url)
+    public function delete($arg)
     {
-        return $this->request('DELETE', $url);
+        return $this->request('DELETE', $arg);
     }
 
     /**
