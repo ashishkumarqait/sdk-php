@@ -56,12 +56,23 @@ abstract class AbstractClient
     }
 
     /**
+     * Expose the raw request service as a method so it can be called
+     * like LiveIntentClient::request() in some special contexts.
+     *
+     * @return null|\LiveIntent\Services\BaseService
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
      * Dynamically resolve a service instance. This makes it easy
      * to access individual services directly as getters on the
      * client rather than instantiating every single service.
      *
      * @param string $name
-     * @return null|\LiveIntent\Services\AbstractResourceService
+     * @return null|\LiveIntent\Services\BaseService
      */
     public function __get($name)
     {

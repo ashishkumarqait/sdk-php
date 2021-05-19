@@ -30,10 +30,6 @@ class ServiceFactory
         'campaigns' => CampaignService::class,
         'insertionOrders' => InsertionOrderService::class,
         'lineItems' => LineItemService::class,
-
-        // We'll expose a 'special' request helper to allow quick calls
-        // into the API, or for occasional manual overrides
-        'request' => BaseService::class,
     ];
 
     /**
