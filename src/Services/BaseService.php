@@ -65,7 +65,6 @@ class BaseService extends Factory
     public function actingAs(int $userId)
     {
         $this->tokenService->actAs($userId);
-        // $request = new PendingRequest($this);
 
         return $this;
     }

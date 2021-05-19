@@ -88,6 +88,10 @@ abstract class AbstractResourceService extends BaseService
             $payload = array_merge($attributes->getDirty(), ['version' => $attributes->version]);
         }
 
+        if ($id && empty($attributes['version'])) {
+            $payload['version'] = $this->find($id)->version;
+        }
+
         return $this->withJson($payload)->request('post', $id ? $this->resourceUrl($id) : $this->baseUrl);
     }
 
