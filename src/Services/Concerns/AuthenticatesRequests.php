@@ -35,7 +35,7 @@ trait AuthenticatesRequests
     {
         $options = $request->mergeOptions();
 
-        if (data_get($options, 'headers.Authorizaion') || data_get($options, 'cookies')) {
+        if (data_get($options, 'headers.Authorization') || data_get($options, 'cookies')) {
             return;
         }
 
