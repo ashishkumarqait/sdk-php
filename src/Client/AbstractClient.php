@@ -39,9 +39,20 @@ abstract class AbstractClient
      */
     public function actingAs(int $userId)
     {
-        $this->options['acting_as_user_id'] = $userId;
+        $this->options['act_as_user_id'] = $userId;
 
         return $this;
+    }
+
+    /**
+     * Impersonate the given user when issuing requests.
+     *
+     * @param int $userId
+     * @return $this
+     */
+    public function actAs(int $userId)
+    {
+        return $this->actingAs($userId);
     }
 
     /**
