@@ -48,6 +48,10 @@ class BaseService extends Factory
     {
         $request = new PendingRequest($this);
 
+        if (data_get($this->options, 'act_as_user_id')) {
+            $this->actingAs(data_get($this->options, 'act_as_user_id'));
+        }
+
         return $request
             ->acceptJson()
             ->baseUrl(data_get($this->options, 'base_url'))

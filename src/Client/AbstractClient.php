@@ -32,6 +32,19 @@ abstract class AbstractClient
     }
 
     /**
+     * Impersonate the given user when issuing requests.
+     *
+     * @param int $userId
+     * @return $this
+     */
+    public function actingAs(int $userId)
+    {
+        $this->options['acting_as_user_id'] = $userId;
+
+        return $this;
+    }
+
+    /**
      * Specify an authorization token for all requests.
      *
      * @param  string  $token
