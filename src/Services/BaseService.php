@@ -48,7 +48,7 @@ class BaseService extends Factory
     {
         $request = new PendingRequest($this);
 
-        if (data_get($this->options, 'act_as_user_id')) {
+        if (data_get($this->options, 'act_as_user_id') && $this->tokenService) {
             $this->actingAs(data_get($this->options, 'act_as_user_id'));
         }
 
