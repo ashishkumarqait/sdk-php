@@ -50,9 +50,8 @@ class BaseService extends Factory
 
         return $request
             ->acceptJson()
-            ->timeout(data_get($this->options, 'timeout', 10))
             ->baseUrl(data_get($this->options, 'base_url'))
-            ->withOptions(data_get($this->options, 'guzzleOptions', []))
+            ->withOptions($this->options)
             ->retry(data_get($this->options, 'tries', 1), data_get($this->options, 'retryDelay', 10));
     }
 

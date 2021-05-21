@@ -54,22 +54,24 @@ class ServiceFactory
      * @param string $name
      * @return null|\LiveIntent\Services\BaseService
      */
-    public function make($name)
+    public function make($name, array $options = [])
     {
+        $options = array_merge($this->options, $options);
+
         if (! \array_key_exists($name, static::$classMap)) {
             return null;
         }
 
         $service = static::$classMap[$name];
 
-        return tap(new $service($this->options), function ($service) {
+        return tap(new $service($options), function ($service) use ($options) {
             $service->setTokenService($this->tokenService);
 
-            if (data_get($this->options, 'shouldRecord')) {
+            if (data_get($options, 'shouldRecord')) {
                 $service->saveSnapshots();
             }
 
-            if (data_get($this->options, 'shouldFake')) {
+            if (data_get($options, 'shouldFake')) {
                 $service->fake();
             }
         });

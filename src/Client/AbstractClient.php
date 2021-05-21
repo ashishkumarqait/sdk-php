@@ -2,6 +2,7 @@
 
 namespace LiveIntent\Client;
 
+use GuzzleHttp\Cookie\CookieJar;
 use LiveIntent\Services\ServiceFactory;
 
 abstract class AbstractClient
@@ -28,6 +29,34 @@ abstract class AbstractClient
     public function __construct(array $options = [])
     {
         $this->options = array_merge($this->options, $options);
+    }
+
+    /**
+     * Specify an authorization token for all requests.
+     *
+     * @param  string  $token
+     * @param  string  $type
+     * @return $this
+     */
+    public function withToken($token, $type = 'Bearer')
+    {
+        $this->options['headers']['Authorization'] = trim($type.' '.$token);
+
+        return $this;
+    }
+
+    /**
+     * Set the options that should be used by the client.
+     *
+     * @return $this
+     */
+    public function withCookies(array $cookies, string $domain)
+    {
+        $this->options = array_merge_recursive($this->options, [
+            'cookies' => CookieJar::fromArray($cookies, $domain),
+        ]);
+
+        return $this;
     }
 
     /**
@@ -80,6 +109,6 @@ abstract class AbstractClient
             $this->serviceFactory = new ServiceFactory($this->options);
         }
 
-        return $this->serviceFactory->make($name);
+        return $this->serviceFactory->make($name, $this->options);
     }
 }
