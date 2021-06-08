@@ -30,6 +30,8 @@ class ServiceFactory
         'campaigns' => CampaignService::class,
         'insertionOrders' => InsertionOrderService::class,
         'lineItems' => LineItemService::class,
+        'mediaGroups' => MediaGroupService::class,
+        'publishers' => PublisherService::class,
 
         // We'll expose a 'special' request helper to allow quick calls
         // into the API, or for occasional manual overrides
