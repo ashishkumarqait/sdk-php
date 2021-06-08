@@ -11,10 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Generate changelog
+        id: changelog
         uses: metcalfc/changelog-generator@v1.0.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Draft release
+        id: draft_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -23,4 +25,4 @@ jobs:
           release_name: ${{ github.ref }}
           body: ${{ steps.changelog.outputs.changelog }}
           draft: false
-          prerelease: true
+          prerelease: false
