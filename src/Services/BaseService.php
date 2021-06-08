@@ -46,11 +46,15 @@ class BaseService extends Factory
      */
     protected function newPendingRequest()
     {
-        $request = new PendingRequest($this);
-
         if (data_get($this->options, 'act_as_user_id') && $this->tokenService) {
             $this->actingAs(data_get($this->options, 'act_as_user_id'));
         }
+
+        $request = tap(new PendingRequest($this), function ($request) {
+            $request->buildClient();
+
+            $request->withMiddleware(fn () => $this->pendingRequest = null);
+        });
 
         return $request
             ->acceptJson()

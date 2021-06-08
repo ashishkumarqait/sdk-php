@@ -17,7 +17,9 @@ class AuthServiceTest extends ServiceTestCase
             'base_url' => env('LI_BASE_URL', 'http://localhost:33001'),
         ]);
 
-        $tokenService->fake();
+        if (env('USE_SNAPSHOTS', true)) {
+            $tokenService->fake();
+        }
 
         $user = $this->service->withToken($tokenService->token())->user();
 
