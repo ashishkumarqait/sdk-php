@@ -22,5 +22,5 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
           body: ${{ steps.changelog.outputs.changelog }}
-          draft: true
-          prerelease: false
+          draft: false
+          prerelease: true
