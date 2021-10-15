@@ -31,6 +31,8 @@ echo $lineItem->id;
 
 Should be written, and will include what services are available.
 
+Currently available services can be found by looking [here](/src/Services/ServiceFactory.php#L27).
+
 ## Request Options
 
 When creating a client, you pay pass an array of options to further configure the client. If you require a per-request configuration, the individual service methods will also accept this optional array.
