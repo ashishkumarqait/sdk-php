@@ -17,7 +17,7 @@
         "nesbot/carbon": "^2.46"
     },
     "require-dev": {
-        "liveintent/php-cs-rules": "^0.0.2",
+        "liveintent/php-cs-fixer": "^2.0",
         "nunomaduro/collision": "^5.4",
         "phpunit/phpunit": "^9.5",
         "ramsey/conventional-commits": "^1.1",
@@ -38,7 +38,7 @@
     },
     "scripts": {
         "psalm": "vendor/bin/psalm",
-        "lint": "vendor/bin/php-cs-fixer fix",
+        "lint": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
         "test": "vendor/bin/phpunit",
         "test-watch": "vendor/bin/phpunit-watcher watch",
         "test-record": "RECORD_SNAPSHOTS=true vendor/bin/phpunit",
