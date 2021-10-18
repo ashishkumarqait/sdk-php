@@ -56,8 +56,6 @@ class BaseService extends Factory
             collect(data_get($this->options, 'middleware'))->each(
                 fn ($middleware) => $request->withMiddleware($middleware)
             );
-
-            $request->withMiddleware(fn () => $this->pendingRequest = null);
         });
 
         return $request
