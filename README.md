@@ -1,6 +1,6 @@
 # LiveIntent SDK PHP
 
-[![Test](https://github.com/LiveIntent/sdk-php/actions/workflows/test.yml/badge.svg)](https://github.com/LiveIntent/sdk-php/actions/workflows/test.yml)
+[![Test](https://github.com/LiveIntent/sdk-php/actions/workflows/run-tests.yml/badge.svg)](https://github.com/LiveIntent/sdk-php/actions/workflows/run-tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/liveintent/sdk-php/v/stable.svg)](https://packagist.org/packages/liveintent/sdk-php)
 [![License](https://poser.pugx.org/liveintent/sdk-php/license)](//packagist.org/packages/liveintent/sdk-php)
 
