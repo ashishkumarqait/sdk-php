@@ -31,7 +31,16 @@ echo $lineItem->id;
 
 Should be written, and will include what services are available.
 
+### Services
+
 Currently available services can be found by looking [here](/src/Services/ServiceFactory.php#L27).
+
+### Override example (todo)
+
+```php
+$response = $liveIntent->request()->get('/auth/user/4090');
+$response->status();
+```
 
 ## Request Options
 

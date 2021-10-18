@@ -14,7 +14,7 @@ class UserService extends AbstractResourceService
     /**
      * The base url for this entity.
      */
-    protected $baseUrl = '/user';
+    protected $baseUrl = '/auth/user';
 
     /**
      * The resource class for this entity.
