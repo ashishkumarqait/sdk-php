@@ -17,6 +17,11 @@ class UserService extends AbstractResourceService
     protected $baseUrl = '/auth/user';
 
     /**
+     * The base url for searches for this entity.
+     */
+    protected $searchUrl = '/search/user';
+
+    /**
      * The resource class for this entity.
      */
     protected $objectClass = User::class;

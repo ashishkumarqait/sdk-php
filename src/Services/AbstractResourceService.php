@@ -4,9 +4,12 @@ namespace LiveIntent\Services;
 
 use LiveIntent\Resource;
 use LiveIntent\Exceptions;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 abstract class AbstractResourceService extends BaseService
 {
+    use ForwardsCalls;
+
     /**
      * The resource's base url. Usually it will just be `/entity`.
      *
@@ -109,22 +112,57 @@ abstract class AbstractResourceService extends BaseService
     //     //
     // }
 
-    // /**
-    //  */
-    // public function where($field, $operator, $value)
-    // {
-    //     //
-    // }
-
     /**
      * Delete a resource by its id.
      *
      * @param string|int $arg
-     * @return \LiveIntent\Resource|\Illuminate\Http\Client\Response
+     * @return \LiveIntent\Resource
      */
     public function delete($arg)
     {
-        return parent::request('delete', $this->resourceUrl($arg));
+        return $this->requestRaw('delete', $this->resourceUrl($arg));
+    }
+
+    /**
+     * Issue a raw request without mapping the respon.se
+     *
+     * @return \Illuminate\Http\Client\Response
+     */
+    public function requestRaw(string $method, string $url, array $options = [])
+    {
+        return parent::request($method, $url, $options);
+    }
+
+    /**
+     * Search for the resource.
+     *
+     * @return \stdClass
+     */
+    public function searchRaw(array $payload, array $options = [])
+    {
+        $response = $this->withJson($payload)->requestRaw(
+            'post',
+            $this->searchUrl(),
+            $options
+        );
+
+        return (object) $response->json();
+    }
+
+    /**
+     * Search for the resource.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function search(array $payload, array $options = [])
+    {
+        $results = data_get(
+            $this->searchRaw($payload, $options),
+            'output',
+            []
+        );
+
+        return collect($results)->map(fn ($d) => $this->newResource($d));
     }
 
     /**
@@ -135,13 +173,24 @@ abstract class AbstractResourceService extends BaseService
      * @param string $method
      * @param string $url
      * @param array $options
+     *
      * @return \LiveIntent\Resource
      */
     public function request(string $method, string $url, array $options = [])
     {
-        $response = parent::request($method, $url, $options);
+        $response = $this->requestRaw($method, $url, $options);
 
         return $this->newResource($response->json()['output']);
+    }
+
+    /**
+     * Get the search url for the resource.
+     *
+     * @return string
+     */
+    protected function searchUrl()
+    {
+        return $this->searchUrl ?? '/search'.$this->baseUrl;
     }
 
     /**
@@ -167,5 +216,31 @@ abstract class AbstractResourceService extends BaseService
         $class = $this->objectClass;
 
         return new $class($body);
+    }
+
+    /**
+     * Create a new search query builder.
+     *
+     * @return \LiveIntent\Services\SearchQueryBuilder
+     */
+    private function newSearchQuery()
+    {
+        return new SearchQueryBuilder($this);
+    }
+
+    /**
+     * Dynamically forward a call into the resource service or the query builder.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if (method_exists($this->newSearchQuery(), $method)) {
+            return $this->forwardCallTo($this->newSearchQuery(), $method, $parameters);
+        }
+
+        return parent::__call($method, $parameters);
     }
 }
