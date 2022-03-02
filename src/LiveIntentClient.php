@@ -12,6 +12,7 @@ use LiveIntent\Client\AbstractClient;
  * @property \LiveIntent\Services\CampaignService $campaigns
  * @property \LiveIntent\Services\InsertionOrderService $insertionOrders
  * @property \LiveIntent\Services\LineItemService $lineItems
+ * @property \LiveIntent\Services\NewsletterService $newsletters
  *
  * @property \LiveIntent\Services\BaseService $request
  */

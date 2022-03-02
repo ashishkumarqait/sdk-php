@@ -21,4 +21,22 @@ abstract class Fixtures
     {
         return '00009758365a11e7943622000a974651';
     }
+
+    /** @return int */
+    public static function newsletterId()
+    {
+        return 36116;
+    }
+
+    /** @return string */
+    public static function newsletterHash()
+    {
+        return '03fb20f13cc811ec941d0ab243175da9';
+    }
+
+    /** @return string */
+    public static function publisherHash()
+    {
+        return 'b3e515b13cc711ec941d0ab243175da9';
+    }
 }

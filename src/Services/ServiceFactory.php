@@ -31,6 +31,7 @@ class ServiceFactory
         'insertionOrders' => InsertionOrderService::class,
         'lineItems' => LineItemService::class,
         'mediaGroups' => MediaGroupService::class,
+        'newsletters' => NewsletterService::class,
         'publishers' => PublisherService::class,
         'users' => UserService::class,
 
