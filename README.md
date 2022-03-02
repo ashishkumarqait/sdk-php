@@ -143,3 +143,8 @@ class TestCase extends PHPUnit
 The LiveIntent client inherits from Laravel's Http Client. Therefore, all the methods available to that client, will also be available here.
 
 For detailed documentation see [here](https://laravel.com/docs/8.x/http-client#testing).
+
+## Development
+
+For information about how to contribute to this project please see
+[here](/docs/development.md).
