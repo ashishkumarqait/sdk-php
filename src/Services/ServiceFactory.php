@@ -25,6 +25,7 @@ class ServiceFactory
      * @var array<string, class-string>
      */
     protected static $classMap = [
+        'adSlots' => AdSlotService::class,
         'advertisers' => AdvertiserService::class,
         'auth' => AuthService::class,
         'campaigns' => CampaignService::class,
