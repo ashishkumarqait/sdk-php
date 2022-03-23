@@ -41,7 +41,7 @@ The SDK uses Heimdall/Bifrost to authenticate so you need to create a Client and
 
 First you need to get a token from Bifrost using the `oauth/token` endpoint.
 
-Grab the token and put it into the Authorize-header in the Heimdall API.
+Grab the token and put it into the Authorize header in the Heimdall API.
 
 You can use the Heimdall API to create your client.
 
