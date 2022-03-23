@@ -188,13 +188,9 @@ trait MocksRequests
      */
     private function getNormalizedRequestData(Request $request)
     {
-        $data = $request->isJson()
-            ? json_decode(collect($request->data())->flip()->first(), true)
-            : $request->data();
-
         $excludedKeys = ['version', 'client_id', 'client_secret'];
 
-        return collect($data)->except($excludedKeys)->toArray();
+        return collect($request->data())->except($excludedKeys)->toArray();
     }
 
     /**

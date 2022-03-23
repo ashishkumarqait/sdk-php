@@ -26,10 +26,132 @@ class AdSlotServiceTest extends ServiceTestCase
             'newsletter' => Fixtures::newsletterHash(),
             'type' => 'image',
             'mediaType' => 'newsletter',
-            'sizes' => ''
+            'sizes' => [
+                [
+                    'width' => 500,
+                    'height' => 600,
+                    'floor' => 1.0,
+                    'deviceTypes' => [1,2,3]
+                ]
+            ],
+            'adIndicatorId' => 1
         ]);
 
         $this->assertNotNull($adSlot->id);
         $this->assertInstanceOf(AdSlot::class, $adSlot);
+    }
+
+    public function testIsCreatableViaResourceInstance()
+    {
+        $adSlot = new AdSlot([
+            'name' => 'SDK Test',
+            'newsletter' => Fixtures::newsletterHash(),
+            'type' => 'image',
+            'mediaType' => 'newsletter',
+            'sizes' => [
+                [
+                    'width' => 500,
+                    'height' => 600,
+                    'floor' => 1.0,
+                    'deviceTypes' => [1,2,3]
+                ]
+            ],
+            'adIndicatorId' => 1
+        ]);
+
+        $adSlot = $this->service->create($adSlot);
+
+        $this->assertNotNull($adSlot->id);
+        $this->assertInstanceOf(AdSlot::class, $adSlot);
+    }
+
+    public function testIsUpdateableViaAttributesArray()
+    {
+        $adSlot = $this->service->find(Fixtures::adSlotId());
+
+        $updatedName = 'SDK_TEST_UPDATE_NAME';
+
+        $adSlot = $this->service->update([
+            'id' => $adSlot->id,
+            'version' => $adSlot->version,
+            'name' => $updatedName,
+        ]);
+
+        $this->assertEquals($updatedName, $adSlot->name);
+        $this->assertInstanceOf(AdSlot::class, $adSlot);
+    }
+
+    public function testIsUpdateableViaResourceInstance()
+    {
+        $adSlot = $this->service->find(Fixtures::adSlotId());
+        $updatedName = 'SDK_TEST_UPDATE_NAME';
+
+        $adSlot->name = $updatedName;
+        $adSlot = $this->service->update($adSlot);
+
+        $this->assertEquals($updatedName, $adSlot->name);
+        $this->assertInstanceOf(AdSlot::class, $adSlot);
+    }
+
+    public function testCanCreateOrUpdate()
+    {
+        $originalAdSlot = $this->service->createOrUpdate([
+            'name' => 'SDK Test',
+            'newsletter' => Fixtures::newsletterHash(),
+            'type' => 'image',
+            'mediaType' => 'newsletter',
+            'sizes' => [
+                [
+                    'width' => 500,
+                    'height' => 600,
+                    'floor' => 1.0,
+                    'deviceTypes' => [1,2,3]
+                ]
+            ],
+            'adIndicatorId' => 1
+        ]);
+
+        $this->assertInstanceOf(AdSlot::class, $originalAdSlot);
+
+        $updatedAdSlot = $this->service->createOrUpdate($originalAdSlot);
+        $this->assertInstanceOf(AdSlot::class, $updatedAdSlot);
+        $this->assertEquals($updatedAdSlot->id, $originalAdSlot->id);
+        $this->assertEquals($updatedAdSlot->version, $originalAdSlot->version + 1);
+    }
+
+    public function testIsDeletable()
+    {
+        $adSlot = $this->service->createOrUpdate([
+            'name' => 'SDK Test',
+            'newsletter' => Fixtures::newsletterHash(),
+            'type' => 'image',
+            'mediaType' => 'newsletter',
+            'sizes' => [
+                [
+                    'width' => 500,
+                    'height' => 600,
+                    'floor' => 1.0,
+                    'deviceTypes' => [1,2,3]
+                ]
+            ],
+            'adIndicatorId' => 1
+        ]);
+
+        $this->assertInstanceOf(AdSlot::class, $adSlot);
+
+        $this->service->delete($adSlot->id);
+
+        $deletedAdSlot = $this->service->find($adSlot->id);
+        $this->assertEquals('deleted', $deletedAdSlot->status);
+    }
+
+    public function testThrowsWhenInvalidDataIsPassed()
+    {
+        $this->expectException(InvalidRequestException::class);
+
+        $this->service->create([
+            'name' => 'SDK Test',
+            'newsletter' => Fixtures::newsletterHash()
+        ]);
     }
 }
