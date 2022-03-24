@@ -189,7 +189,7 @@ trait MocksRequests
     private function getNormalizedRequestData(Request $request)
     {
         // Turn request data into an array
-        $temp = json_decode(collect($request->data()), true);
+        $temp = json_decode(collect((string) $request->data()), true);
 
         // Initialize data when not json
         $data = $request->data();
