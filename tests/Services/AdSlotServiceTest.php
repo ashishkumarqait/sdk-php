@@ -93,58 +93,6 @@ class AdSlotServiceTest extends ServiceTestCase
         $this->assertInstanceOf(AdSlot::class, $adSlot);
     }
 
-    public function testCanCreateOrUpdate()
-    {
-        $originalAdSlot = $this->service->createOrUpdate([
-            'name' => 'SDK Test',
-            'newsletter' => Fixtures::newsletterHash(),
-            'type' => 'image',
-            'mediaType' => 'newsletter',
-            'sizes' => [
-                [
-                    'width' => 500,
-                    'height' => 600,
-                    'floor' => 1.0,
-                    'deviceTypes' => [1,2,3]
-                ]
-            ],
-            'adIndicatorId' => 1
-        ]);
-
-        $this->assertInstanceOf(AdSlot::class, $originalAdSlot);
-
-        $updatedAdSlot = $this->service->createOrUpdate($originalAdSlot);
-        $this->assertInstanceOf(AdSlot::class, $updatedAdSlot);
-        $this->assertEquals($updatedAdSlot->id, $originalAdSlot->id);
-        $this->assertEquals($updatedAdSlot->version, $originalAdSlot->version + 1);
-    }
-
-    public function testIsDeletable()
-    {
-        $adSlot = $this->service->createOrUpdate([
-            'name' => 'SDK Test',
-            'newsletter' => Fixtures::newsletterHash(),
-            'type' => 'image',
-            'mediaType' => 'newsletter',
-            'sizes' => [
-                [
-                    'width' => 500,
-                    'height' => 600,
-                    'floor' => 1.0,
-                    'deviceTypes' => [1,2,3]
-                ]
-            ],
-            'adIndicatorId' => 1
-        ]);
-
-        $this->assertInstanceOf(AdSlot::class, $adSlot);
-
-        $this->service->delete($adSlot->id);
-
-        $deletedAdSlot = $this->service->find($adSlot->id);
-        $this->assertEquals('deleted', $deletedAdSlot->status);
-    }
-
     public function testThrowsWhenInvalidDataIsPassed()
     {
         $this->expectException(InvalidRequestException::class);
