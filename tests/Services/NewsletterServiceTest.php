@@ -24,7 +24,7 @@ class NewsletterServiceTest extends ServiceTestCase
         $newsletter = $this->service->create([
             'name' => 'SDK Test',
             'publisher' => Fixtures::publisherHash(),
-            'category' => 1
+            'category' => 1,
         ]);
 
         $this->assertNotNull($newsletter->id);
@@ -36,7 +36,7 @@ class NewsletterServiceTest extends ServiceTestCase
         $newsletter = new Newsletter([
             'name' => 'SDK Test',
             'publisher' => Fixtures::publisherHash(),
-            'category' => 1
+            'category' => 1,
         ]);
 
         $newsletter = $this->service->create($newsletter);
@@ -79,7 +79,7 @@ class NewsletterServiceTest extends ServiceTestCase
 
         $this->service->create([
             'name' => 'SDK Test',
-            'publisher' => Fixtures::publisherHash()
+            'publisher' => Fixtures::publisherHash(),
         ]);
     }
 }

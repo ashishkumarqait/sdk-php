@@ -31,10 +31,10 @@ class AdSlotServiceTest extends ServiceTestCase
                     'width' => 500,
                     'height' => 600,
                     'floor' => 1.0,
-                    'deviceTypes' => [1,2,3]
-                ]
+                    'deviceTypes' => [1,2,3],
+                ],
             ],
-            'adIndicatorId' => 1
+            'adIndicatorId' => 1,
         ]);
 
         $this->assertNotNull($adSlot->id);
@@ -53,10 +53,10 @@ class AdSlotServiceTest extends ServiceTestCase
                     'width' => 500,
                     'height' => 600,
                     'floor' => 1.0,
-                    'deviceTypes' => [1,2,3]
-                ]
+                    'deviceTypes' => [1,2,3],
+                ],
             ],
-            'adIndicatorId' => 1
+            'adIndicatorId' => 1,
         ]);
 
         $adSlot = $this->service->create($adSlot);
@@ -99,7 +99,7 @@ class AdSlotServiceTest extends ServiceTestCase
 
         $this->service->create([
             'name' => 'SDK Test',
-            'newsletter' => Fixtures::newsletterHash()
+            'newsletter' => Fixtures::newsletterHash(),
         ]);
     }
 }
