@@ -14,7 +14,7 @@ class AuthServiceTest extends ServiceTestCase
         $tokenService = new TokenService([
             'client_id' => env('CLIENT_ID'),
             'client_secret' => env('CLIENT_SECRET'),
-            'base_url' => env('LI_BASE_URL', 'http://localhost:33001'),
+            'base_url' => env('LI_BASE_URL', 'http://localhost:3000'),
         ]);
 
         if (env('USE_SNAPSHOTS', true)) {
