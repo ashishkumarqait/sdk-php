@@ -193,7 +193,7 @@ trait MocksRequests
 
         if ($request->isJson()) {
             // Turn request data into an array
-            $temp = json_decode(collect($request->data()), true);
+            $temp = json_decode((string) collect($request->data()), true);
 
             $keys = array_keys($temp);
 
