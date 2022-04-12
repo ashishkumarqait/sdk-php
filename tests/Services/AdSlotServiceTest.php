@@ -75,6 +75,14 @@ class AdSlotServiceTest extends ServiceTestCase
             'id' => $adSlot->id,
             'version' => $adSlot->version,
             'name' => $updatedName,
+            'sizes' => [
+                [
+                    'width' => 400,
+                    'height' => 500,
+                    'floor' => 1.0,
+                    'deviceTypes' => [1,2,3],
+                ],
+            ],
         ]);
 
         $this->assertEquals($updatedName, $adSlot->name);
