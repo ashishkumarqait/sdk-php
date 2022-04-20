@@ -1,5 +1,5 @@
 {
-    "name": "liveintent/sdk-php",
+    "name": "ashish-liveintent/sdk-php",
     "description": "LiveIntent SDK PHP",
     "keywords": [
         "liveintent",
@@ -10,10 +10,10 @@
     "require": {
         "php": "^8.0|^8.1",
         "guzzlehttp/guzzle": "^7.3",
-        "illuminate/collections": "^8.40",
-        "illuminate/contracts": "^8.40",
-        "illuminate/http": "^8.38",
-        "illuminate/support": "^8.40",
+        "illuminate/collections": "^9.2",
+        "illuminate/contracts": "^9.2",
+        "illuminate/http": "^9.2",
+        "illuminate/support": "^9.2",
         "nesbot/carbon": "^2.46"
     },
     "require-dev": {
